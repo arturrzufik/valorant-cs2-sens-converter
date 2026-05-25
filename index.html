@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Convert sensitivity between Valorant and CS2 using yaw values, eDPI, and estimated cm/360.">
+  <meta property="og:title" content="Valorant ↔ CS2 Sens Converter">
+  <meta property="og:description" content="A lightweight sensitivity calculator for Valorant and CS2 players. Keep a similar 360° mouse feel across both games.">
+  <meta property="og:type" content="website">
+  <meta property="og:image" content="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='1200' height='630' viewBox='0 0 1200 630'%3E%3Crect width='1200' height='630' fill='%23080d14'/%3E%3Ccircle cx='230' cy='160' r='220' fill='%23ff4d4d' opacity='.28'/%3E%3Ccircle cx='960' cy='480' r='260' fill='%23ffad3b' opacity='.24'/%3E%3Ctext x='80' y='250' fill='%23eef4ff' font-family='Segoe UI,Arial,sans-serif' font-size='72' font-weight='800'%3EValorant %E2%86%94 CS2%3C/text%3E%3Ctext x='80' y='345' fill='%23ffad3b' font-family='Segoe UI,Arial,sans-serif' font-size='88' font-weight='900'%3ESens Converter%3C/text%3E%3Ctext x='84' y='430' fill='%23a8b7cc' font-family='Segoe UI,Arial,sans-serif' font-size='34'%3Ecm/360 based sensitivity calculator%3C/text%3E%3C/svg%3E">
+  <title>Valorant ↔ CS2 Sens Converter</title>
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='12' fill='%23080d14'/%3E%3Cpath d='M12 14h14l-7 36L12 14Zm40 0L37 50l-5-13 8-23h12Z' fill='%23ff4d4d'/%3E%3Cpath d='M30 39h10l-3 11h-7V39Z' fill='%23ffad3b'/%3E%3C/svg%3E">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <main class="calculator" aria-labelledby="page-title">
+    <section class="header">
+      <div class="eyebrow-row">
+        <div class="eyebrow">VALORANT ↔ CS2 SENS CONVERTER</div>
+        <div class="badge">cm/360 based</div>
+      </div>
+
+      <div class="title-row">
+        <h1 id="page-title">Sensitivity calculator</h1>
+        <div class="help">
+          <button class="help-button" type="button" aria-label="How does this calculator work?">?</button>
+          <div class="tooltip" role="tooltip">
+            The calculator uses yaw values: Valorant 0.07 and CS2 0.022. It matches sensitivity to keep your cm/360 as close as possible.
+          </div>
+        </div>
+      </div>
+
+      <p class="subtitle">Convert your mouse settings between Valorant and CS2 while keeping a similar 360° turn.</p>
+    </section>
+
+    <form id="calculator-form" novalidate>
+      <div class="direction-switch" aria-label="Conversion direction">
+        <input id="valorant-to-cs2" name="direction" type="radio" value="valorant-cs2" checked>
+        <label for="valorant-to-cs2">Valorant → CS2</label>
+
+        <input id="cs2-to-valorant" name="direction" type="radio" value="cs2-valorant">
+        <label for="cs2-to-valorant">CS2 → Valorant</label>
+      </div>
+
+      <div class="field">
+        <label id="source-sens-label" for="source-sens">Valorant sensitivity</label>
+        <input id="source-sens" name="sourceSens" type="text" inputmode="decimal" autocomplete="off" placeholder="e.g. 0.35">
+      </div>
+
+      <div class="field">
+        <label id="source-dpi-label" for="source-dpi">Valorant DPI</label>
+        <input id="source-dpi" name="sourceDpi" type="text" inputmode="numeric" autocomplete="off" placeholder="e.g. 800">
+        <div class="dpi-presets" aria-label="Popular source DPI presets">
+          <button class="preset-button" type="button" data-target="source" data-dpi="400">400</button>
+          <button class="preset-button" type="button" data-target="source" data-dpi="800">800</button>
+          <button class="preset-button" type="button" data-target="source" data-dpi="1600">1600</button>
+          <button class="preset-button" type="button" data-target="source" data-dpi="3200">3200</button>
+        </div>
+      </div>
+
+      <div class="field">
+        <label id="target-dpi-label" for="target-dpi">CS2 DPI <span class="optional-label">(optional)</span></label>
+        <input id="target-dpi" name="targetDpi" type="text" inputmode="numeric" autocomplete="off" placeholder="Blank = Valorant DPI">
+        <div class="dpi-presets" aria-label="Popular target DPI presets">
+          <button class="preset-button" type="button" data-target="target" data-dpi="400">400</button>
+          <button class="preset-button" type="button" data-target="target" data-dpi="800">800</button>
+          <button class="preset-button" type="button" data-target="target" data-dpi="1600">1600</button>
+          <button class="preset-button" type="button" data-target="target" data-dpi="3200">3200</button>
+        </div>
+        <span id="target-dpi-hint" class="hint">Leave blank if you use the same DPI in CS2.</span>
+      </div>
+
+      <button class="primary-button" type="submit">Convert sensitivity</button>
+      <div id="message" class="message" role="alert"></div>
+    </form>
+
+    <section id="results" class="results" aria-live="polite">
+      <div class="result-main">
+        <span id="target-result-label">Set in CS2:</span>
+        <strong>sensitivity <span id="target-sens-result">0.000</span></strong>
+      </div>
+
+      <div class="copy-row">
+        <button class="copy-button" id="copy-result" type="button">Copy result</button>
+        <span class="copy-status" id="copy-status" aria-live="polite"></span>
+      </div>
+
+      <details class="more-details">
+        <summary>Show more details</summary>
+
+        <div class="details-content">
+          <div class="stats">
+            <div class="stat">
+              <span id="source-edpi-label">eDPI Valorant</span>
+              <strong id="source-edpi">0.000</strong>
+            </div>
+            <div class="stat">
+              <span id="target-edpi-label">eDPI CS2</span>
+              <strong id="target-edpi">0.000</strong>
+            </div>
+          </div>
+
+          <p class="note">Compare eDPI mostly within the same game. Values can differ between Valorant and CS2 because each game converts mouse movement differently.</p>
+
+          <div class="cm-section">
+            <h2 class="section-title">Estimated cm/360:</h2>
+            <div class="cm-grid">
+              <div class="cm-card">
+                <span id="source-cm-label">Valorant</span>
+                <strong><span id="source-cm">0.00</span> cm</strong>
+              </div>
+              <div class="cm-card">
+                <span id="target-cm-label">CS2</span>
+                <strong><span id="target-cm">0.00</span> cm</strong>
+              </div>
+            </div>
+          </div>
+        </div>
+      </details>
+    </section>
+  </main>
+
+  <footer class="privacy-note">
+    This calculator runs locally in your browser. It does not save or send your entered data.
+    <br>
+    <span class="disclaimer">This calculator is for base sensitivity. Zoom/scoped sensitivity may need separate adjustment.</span>
+  </footer>
+
+  <script src="script.js"></script>
+</body>
+</html>
