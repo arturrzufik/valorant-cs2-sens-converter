@@ -17,7 +17,6 @@
     <section class="header">
       <div class="eyebrow-row">
         <div class="eyebrow">VALORANT ↔ CS2 SENS CONVERTER</div>
-        <div class="badge">cm/360 based</div>
       </div>
 
       <div class="title-row">
@@ -48,7 +47,7 @@
       </div>
 
       <div class="field">
-        <label id="source-dpi-label" for="source-dpi">Valorant DPI</label>
+        <label id="source-dpi-label" for="source-dpi">Mouse DPI</label>
         <input id="source-dpi" name="sourceDpi" type="text" inputmode="numeric" autocomplete="off" placeholder="e.g. 800">
         <div class="dpi-presets" aria-label="Popular source DPI presets">
           <button class="preset-button" type="button" data-target="source" data-dpi="400">400</button>
@@ -58,8 +57,14 @@
         </div>
       </div>
 
-      <div class="field">
-        <label id="target-dpi-label" for="target-dpi">CS2 DPI <span class="optional-label">(optional)</span></label>
+      <label class="different-dpi-toggle" for="different-target-dpi">
+        <input id="different-target-dpi" name="differentTargetDpi" type="checkbox">
+        <span class="toggle-box" aria-hidden="true"></span>
+        <span id="different-dpi-label">I use a different DPI in CS2</span>
+      </label>
+
+      <div class="field target-dpi-field" id="target-dpi-field" hidden>
+        <label id="target-dpi-label" for="target-dpi">CS2 DPI</label>
         <input id="target-dpi" name="targetDpi" type="text" inputmode="numeric" autocomplete="off" placeholder="Blank = Valorant DPI">
         <div class="dpi-presets" aria-label="Popular target DPI presets">
           <button class="preset-button" type="button" data-target="target" data-dpi="400">400</button>

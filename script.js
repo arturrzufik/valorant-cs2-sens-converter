@@ -26,6 +26,8 @@ const results = document.querySelector("#results");
 const sourceSensInput = document.querySelector("#source-sens");
 const sourceDpiInput = document.querySelector("#source-dpi");
 const targetDpiInput = document.querySelector("#target-dpi");
+const targetDpiField = document.querySelector("#target-dpi-field");
+const differentTargetDpiInput = document.querySelector("#different-target-dpi");
 const directionInputs = document.querySelectorAll('input[name="direction"]');
 const presetButtons = document.querySelectorAll(".preset-button");
 
@@ -33,6 +35,7 @@ const sourceSensLabel = document.querySelector("#source-sens-label");
 const sourceDpiLabel = document.querySelector("#source-dpi-label");
 const targetDpiLabel = document.querySelector("#target-dpi-label");
 const targetDpiHint = document.querySelector("#target-dpi-hint");
+const differentDpiLabel = document.querySelector("#different-dpi-label");
 
 const targetResultLabel = document.querySelector("#target-result-label");
 const targetSensOutput = document.querySelector("#target-sens-result");
@@ -91,16 +94,22 @@ function updateLabels() {
   const direction = getSelectedDirection();
 
   sourceSensLabel.textContent = `${direction.sourceName} sensitivity`;
-  sourceDpiLabel.textContent = `${direction.sourceName} DPI`;
-  targetDpiLabel.innerHTML = `${direction.targetName} DPI <span class="optional-label">(optional)</span>`;
-  targetDpiHint.textContent = `Leave blank if you use the same DPI in ${direction.targetName}.`;
+  sourceDpiLabel.textContent = "Mouse DPI";
+  targetDpiLabel.textContent = `${direction.targetName} DPI`;
+  targetDpiHint.textContent = `Only fill this in if your mouse DPI is different in ${direction.targetName}.`;
+  differentDpiLabel.textContent = `I use a different DPI in ${direction.targetName}`;
   targetResultLabel.textContent = `Set in ${direction.targetName}:`;
   sourceEdpiLabel.textContent = `eDPI ${direction.sourceName}`;
   targetEdpiLabel.textContent = `eDPI ${direction.targetName}`;
   sourceCmLabel.textContent = direction.sourceName;
   targetCmLabel.textContent = direction.targetName;
   sourceSensInput.placeholder = direction.sensPlaceholder;
-  targetDpiInput.placeholder = `Blank = ${direction.sourceName} DPI`;
+  targetDpiInput.placeholder = "e.g. 800";
+  updateTargetDpiVisibility();
+}
+
+function updateTargetDpiVisibility() {
+  targetDpiField.hidden = !differentTargetDpiInput.checked;
 }
 
 function calculateCmPer360(sensitivity, dpi, yaw) {
@@ -112,8 +121,7 @@ function calculateSensitivity(showValidationErrors = true) {
   const direction = getSelectedDirection();
   const sourceSens = parsePositiveNumber(sourceSensInput.value);
   const sourceDpi = parsePositiveNumber(sourceDpiInput.value);
-  const rawTargetDpi = targetDpiInput.value.trim();
-  const targetDpi = rawTargetDpi ? parsePositiveNumber(rawTargetDpi) : sourceDpi;
+  const targetDpi = differentTargetDpiInput.checked ? parsePositiveNumber(targetDpiInput.value) : sourceDpi;
 
   clearError();
   clearCopyStatus();
@@ -183,6 +191,11 @@ directionInputs.forEach((input) => {
     updateLabels();
     recalculateIfPossible();
   });
+});
+
+differentTargetDpiInput.addEventListener("change", () => {
+  updateTargetDpiVisibility();
+  recalculateIfPossible();
 });
 
 presetButtons.forEach((button) => {
