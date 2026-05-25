@@ -9,7 +9,8 @@ I built this after struggling to recreate the same mouse feel across both games 
 Add your deployed link here:
 
 ```text
-https://arturrzufik.github.io/valorant-cs2-sens-converter/
+https://valorant-cs2-sens-converter.pages.dev
+
 
 ```
 
