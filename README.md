@@ -6,6 +6,7 @@ I built this after struggling to recreate the same mouse feel across both games 
 
 ## Live Demo
 
+<<<<<<< HEAD
 Add your deployed link here:
 
 ```text
@@ -21,6 +22,13 @@ Add a screenshot after deployment:
 ```text
 zdj1.png
 ```
+=======
+https://arturrzufik.github.io/valorant-cs2-sens-converter/
+
+## Screenshot
+
+![Valorant CS2 Sens Converter screenshot](zdj1.png)
+>>>>>>> 943434f (Add project screenshot)
 
 ## Features
 
