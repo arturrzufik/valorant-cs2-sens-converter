@@ -18,7 +18,7 @@ https://arturrzufik.github.io/valorant-cs2-sens-converter/
 Add a screenshot after deployment:
 
 ```text
-assets/screenshot.png
+zdj1.png
 ```
 
 ## Features
